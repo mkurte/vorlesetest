@@ -53,3 +53,28 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## Architecture Patterns
+
+- Page components should be as "dumb" as possible — logic lives in a dedicated page service
+- Each page gets its own service (e.g. `SetupService`), provided in the component via `providers: []`, not `providedIn: 'root'`
+- Services expose a `viewModel` signal (computed) containing all template state
+- Form fields in the viewModel use a `FormField<T>` pattern with `value` and `onChange`
+- Actions like `start()` are also part of the viewModel
+- Shared state between pages goes through a global service (e.g. `ReadingTestService` with `providedIn: 'root'`)
+
+## Testing
+
+- Test framework is Vitest (via `@angular/build:unit-test`), not Karma/Jasmine
+- Use `vi.fn()` for mocks, not `jasmine.createSpy()`
+- Use `describe(ClassName, ...)` instead of `describe('ClassName', ...)`
+- Run tests with `npx ng test --watch=false`
+
+## Project Structure
+
+- Pages live in `src/app/pages/<page-name>/`
+- Each page has: `<name>.ts`, `<name>.html`, `<name>.scss`, `<name>.service.ts`, `<name>.spec.ts`, `<name>.service.spec.ts`
+- Global services live in `src/app/services/`
+- Routes use lazy loading via `loadComponent`
+- Font: Roboto via Google Fonts
+- SCSS files include `:host { display: block; }`
