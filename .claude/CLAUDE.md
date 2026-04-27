@@ -57,11 +57,15 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Architecture Patterns
 
 - Page components should be as "dumb" as possible — logic lives in a dedicated page service
+- Ideal dumb component: `protected readonly vm = inject(PageService).viewModel;` — nothing else
 - Each page gets its own service (e.g. `SetupService`), provided in the component via `providers: []`, not `providedIn: 'root'`
 - Services expose a `viewModel` signal (computed) containing all template state
 - Form fields in the viewModel use a `FormField<T>` pattern with `value` and `onChange`
-- Actions like `start()` are also part of the viewModel
+- Actions like `start()`, `next()` are also part of the viewModel — components don't hold logic
+- Navigation (`router.navigate`) happens inside the page service, not in the component
 - Shared state between pages goes through a global service (e.g. `ReadingTestService` with `providedIn: 'root'`)
+- Use `DestroyRef.onDestroy()` for cleanup (e.g. `clearInterval`) in services
+- Use `host: { '(document:click)': '...' }` for document-level event listeners (not `@HostListener`)
 
 ## Testing
 
@@ -69,6 +73,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `vi.fn()` for mocks, not `jasmine.createSpy()`
 - Use `describe(ClassName, ...)` instead of `describe('ClassName', ...)`
 - Run tests with `npx ng test --watch=false`
+- Use `vi.useFakeTimers()` / `vi.advanceTimersByTime()` for timer-based tests
+- Use `TestBed.runInInjectionContext(() => new Service())` to create services with fresh state in tests
 
 ## Project Structure
 
@@ -78,3 +84,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Routes use lazy loading via `loadComponent`
 - Font: Roboto via Google Fonts
 - SCSS files include `:host { display: block; }`
+- Route flow: `/setup` → `/test` → `/result`
+- `ReadingTestService` (global) holds shared state: `words`, `totalSeconds`, `wordsRead`
+- localStorage key `vorlesetest-words` persists the word list across sessions

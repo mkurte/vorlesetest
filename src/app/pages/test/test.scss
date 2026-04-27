@@ -1,3 +1,42 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 2rem;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.timer {
+  bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 300;
+  left: 1.5rem;
+  opacity: .2;
+  position: fixed;
+}
+
+.current-word {
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 700;
+  margin: 0;
+  word-break: break-word;
+}
+
+.result {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
