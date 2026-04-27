@@ -1,12 +1,12 @@
 <h1>Vorlesetest</h1>
 
-<label for="words">Wörter (ein Wort pro Zeile)</label>
+<label for="words">Wörter (ein Wort pro Zeile), Silbentrennung mit Bindestrich</label>
 <textarea
   id="words"
   rows="10"
   [ngModel]="vm().wordsInput.value"
   (ngModelChange)="vm().wordsInput.onChange($event)"
-  placeholder="Hund&#10;Katze&#10;Maus&#10;..."
+  placeholder="Hund&#10;Katze&#10;Maus&#10;Vo-gel&#10;Ka-nin-chen&#10;..."
 ></textarea>
 
 <fieldset>
