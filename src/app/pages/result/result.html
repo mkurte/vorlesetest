@@ -1,1 +1,9 @@
-<p>Result</p>
+<h1>Ergebnis</h1>
+
+<p class="score">{{ vm().wordsRead }} / {{ vm().totalWords }}</p>
+<p class="label">Wörter gelesen</p>
+
+<div class="actions">
+  <button type="button" (click)="vm().restart()">Nochmal</button>
+  <button type="button" (click)="vm().backToSetup()">Neuer Test</button>
+</div>
