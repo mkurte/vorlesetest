@@ -36,10 +36,17 @@ describe(SetupService, () => {
   });
 
   it('should load words from localStorage', () => {
-    localStorage.setItem('vorlesetest-words', 'Hund\nKatze');
+    localStorage.setItem('vorlesetest-words', JSON.stringify(['Hund', 'Katze']));
 
     const freshService = TestBed.runInInjectionContext(() => new SetupService());
     expect(freshService.viewModel().wordsInput.value).toBe('Hund\nKatze');
+  });
+
+  it('should handle invalid localStorage data gracefully', () => {
+    localStorage.setItem('vorlesetest-words', 'not-json');
+
+    const freshService = TestBed.runInInjectionContext(() => new SetupService());
+    expect(freshService.viewModel().wordsInput.value).toBe('');
   });
 
   it('should update wordsInput via onChange', () => {
@@ -95,8 +102,8 @@ describe(SetupService, () => {
       service.viewModel().start();
     });
 
-    it('should persist words to localStorage', () => {
-      expect(localStorage.getItem('vorlesetest-words')).toBe('Hund\nKatze\n\n  Maus  ');
+    it('should persist words as JSON array to localStorage', () => {
+      expect(JSON.parse(localStorage.getItem('vorlesetest-words')!)).toEqual(['Hund', 'Katze', 'Maus']);
     });
 
     it('should set parsed words on ReadingTestService', () => {

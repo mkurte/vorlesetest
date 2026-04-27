@@ -13,16 +13,28 @@ interface SetupViewModel {
   seconds: FormField<number>;
   canStart: boolean;
   start: () => void;
+  shuffle: () => void;
 }
 
 const STORAGE_KEY = 'vorlesetest-words';
+
+function loadWordsFromStorage(): string {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return '';
+    const words = JSON.parse(stored) as string[];
+    return Array.isArray(words) ? words.join('\n') : '';
+  } catch {
+    return '';
+  }
+}
 
 @Injectable()
 export class SetupService {
   private readonly router = inject(Router);
   private readonly readingTestService = inject(ReadingTestService);
 
-  private readonly wordsInput = signal(localStorage.getItem(STORAGE_KEY) ?? '');
+  private readonly wordsInput = signal(loadWordsFromStorage());
   private readonly minutes = signal(1);
   private readonly seconds = signal(0);
 
@@ -47,15 +59,30 @@ export class SetupService {
     },
     canStart: this.canStart(),
     start: () => this.start(),
+    shuffle: () => this.shuffle(),
   }));
 
-  private start(): void {
-    localStorage.setItem(STORAGE_KEY, this.wordsInput());
-
+  private shuffle(): void {
     const words = this.wordsInput()
       .split('\n')
       .map((w) => w.trim())
       .filter((w) => w.length > 0);
+
+    for (let i = words.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [words[i], words[j]] = [words[j], words[i]];
+    }
+
+    this.wordsInput.set(words.join('\n'));
+  }
+
+  private start(): void {
+    const words = this.wordsInput()
+      .split('\n')
+      .map((w) => w.trim())
+      .filter((w) => w.length > 0);
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
 
     this.readingTestService.words.set(words);
     this.readingTestService.totalSeconds.set(this.minutes() * 60 + this.seconds());

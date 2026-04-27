@@ -34,4 +34,7 @@
   </div>
 </fieldset>
 
-<button type="button" [disabled]="!vm().canStart" (click)="vm().start()">Start</button>
+<div class="actions">
+  <button type="button" [disabled]="!vm().canStart" (click)="vm().shuffle()">Wörter mischen</button>
+  <button type="button" [disabled]="!vm().canStart" (click)="vm().start()">Start</button>
+</div>
