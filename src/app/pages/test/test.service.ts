@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { ReadingTestService } from '../../services/reading-test.service';
 
 interface TestViewModel {
-  currentWord: string;
+  currentSyllables: string[];
+  colorSyllables: boolean;
   timeDisplay: string;
   isFinished: boolean;
   wordsRead: number;
@@ -24,7 +25,8 @@ export class TestService {
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
   readonly viewModel = computed<TestViewModel>(() => ({
-    currentWord: this.words()[this.currentIndex()] ?? '',
+    currentSyllables: (this.words()[this.currentIndex()] ?? '').split('-'),
+    colorSyllables: this.readingTestService.colorSyllables(),
     timeDisplay: this.formatTime(this.remainingSeconds()),
     isFinished: this.finished(),
     wordsRead: this.wordsRead(),

@@ -34,6 +34,16 @@
   </div>
 </fieldset>
 
+<div class="checkbox-option">
+  <input
+    type="checkbox"
+    id="color-syllables"
+    [ngModel]="vm().colorSyllables.value"
+    (ngModelChange)="vm().colorSyllables.onChange($event)"
+  />
+  <label for="color-syllables">Silben farbig darstellen</label>
+</div>
+
 <div class="actions">
   <button type="button" [disabled]="!vm().canStart" (click)="vm().shuffle()">Wörter mischen</button>
   <button type="button" [disabled]="!vm().canStart" (click)="vm().start()">Start</button>

@@ -25,6 +25,14 @@
   font-weight: 700;
   margin: 0;
   word-break: break-word;
+
+  .syllable-even {
+    color: #1565c0;
+  }
+
+  .syllable-odd {
+    color: #c62828;
+  }
 }
 
 .result {

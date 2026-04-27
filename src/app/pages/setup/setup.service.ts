@@ -11,6 +11,7 @@ interface SetupViewModel {
   wordsInput: FormField<string>;
   minutes: FormField<number>;
   seconds: FormField<number>;
+  colorSyllables: FormField<boolean>;
   canStart: boolean;
   start: () => void;
   shuffle: () => void;
@@ -37,6 +38,7 @@ export class SetupService {
   private readonly wordsInput = signal(loadWordsFromStorage());
   private readonly minutes = signal(1);
   private readonly seconds = signal(0);
+  private readonly colorSyllables = signal(true);
 
   private readonly canStart = computed(() => {
     const hasWords = this.wordsInput().trim().length > 0;
@@ -56,6 +58,10 @@ export class SetupService {
     seconds: {
       value: this.seconds(),
       onChange: (value: number) => this.seconds.set(value),
+    },
+    colorSyllables: {
+      value: this.colorSyllables(),
+      onChange: (value: boolean) => this.colorSyllables.set(value),
     },
     canStart: this.canStart(),
     start: () => this.start(),
@@ -86,6 +92,7 @@ export class SetupService {
 
     this.readingTestService.words.set(words);
     this.readingTestService.totalSeconds.set(this.minutes() * 60 + this.seconds());
+    this.readingTestService.colorSyllables.set(this.colorSyllables());
     this.router.navigate(['/test']);
   }
 }
