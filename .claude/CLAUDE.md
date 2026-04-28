@@ -84,7 +84,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Shared components live in `src/app/components/<component-name>/` (same service+viewModel pattern as pages)
 - Global services live in `src/app/services/`
 - Routes use lazy loading via `loadComponent`
-- Font: Roboto via Google Fonts
+- Font: Roboto self-hosted from `public/assets/fonts/` (weights 300, 400, 500, 600, 700)
 - SCSS files include `:host { display: block; }`
 - Route flow: `/setup` → `/test` → `/result`
 - `ReadingTestService` (global) holds shared state: `words`, `totalSeconds`, `wordsRead`, `colorSyllables`
