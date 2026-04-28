@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx ng test --watch=false
+
+      - run: npx ng build
+
+      - name: Assemble deploy directory
+        run: |
+          mkdir deploy
+          cp -r dist/vorlesetest/browser/. deploy/
+          cp server/.htaccess deploy/
+
+      - name: Prepare release directory on server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            set -e
+            cd "${{ secrets.DEPLOY_PATH }}"
+            rm -rf release
+            mkdir release
+
+      - name: Upload build to release
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          source: "deploy/."
+          target: "${{ secrets.DEPLOY_PATH }}/release"
+          strip_components: 1
+
+      - name: Swap release into prod
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            set -e
+            cd "${{ secrets.DEPLOY_PATH }}"
+            rm -rf legacy
+            if [ -d prod ]; then mv prod legacy; fi
+            mv release prod
