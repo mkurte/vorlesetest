@@ -2,9 +2,7 @@
 
 <p class="current-word">
   @for (word of vm().currentWords; track $index) {
-    @if ($index > 0) {
-      &nbsp;
-    }
+    @if ($index > 0) {&nbsp;}
     @for (syllable of word.syllables; track $index) {
       <span
         class="syllable"
