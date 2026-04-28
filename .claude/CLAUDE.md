@@ -75,6 +75,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Run tests with `npx ng test --watch=false`
 - Use `vi.useFakeTimers()` / `vi.advanceTimersByTime()` for timer-based tests
 - Use `TestBed.runInInjectionContext(() => new Service())` to create services with fresh state in tests
+- `fakeAsync`/`tick` not available (no zone.js) — use `vi.useFakeTimers()` instead
 
 ## Project Structure
 
@@ -85,5 +86,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Font: Roboto via Google Fonts
 - SCSS files include `:host { display: block; }`
 - Route flow: `/setup` → `/test` → `/result`
-- `ReadingTestService` (global) holds shared state: `words`, `totalSeconds`, `wordsRead`
-- localStorage key `vorlesetest-words` persists the word list across sessions
+- `ReadingTestService` (global) holds shared state: `words`, `totalSeconds`, `wordsRead`, `colorSyllables`
+- localStorage key `vorlesetest-words` persists the word list as JSON array across sessions
+- Words support syllable notation with hyphens (e.g. `Mie-te`, `A-mei-se`) — split into `string[]` on test page
+- CSS class naming uses BEM-like modifiers (e.g. `syllable--even`, `syllable--odd`)
+- When navigating to a page with `(document:click)`, use a `setTimeout` ready-flag to ignore the triggering click (event bubbling from previous page)
