@@ -40,14 +40,23 @@ describe(TestService, () => {
 
   it('should show the first word as syllables', () => {
     service = createService();
-    expect(service.viewModel().currentSyllables).toEqual(['Hund']);
+    expect(service.viewModel().currentWords).toEqual([{ syllables: ['Hund'] }]);
   });
 
   it('should split hyphenated words into syllables', () => {
     service = createService(['Mie-te', 'A-mei-se']);
-    expect(service.viewModel().currentSyllables).toEqual(['Mie', 'te']);
+    expect(service.viewModel().currentWords).toEqual([{ syllables: ['Mie', 'te'] }]);
     service.viewModel().next();
-    expect(service.viewModel().currentSyllables).toEqual(['A', 'mei', 'se']);
+    expect(service.viewModel().currentWords).toEqual([{ syllables: ['A', 'mei', 'se'] }]);
+  });
+
+  it('should split sentence into words with per-word syllables', () => {
+    service = createService(['Die brau-nen Bä-ren']);
+    expect(service.viewModel().currentWords).toEqual([
+      { syllables: ['Die'] },
+      { syllables: ['brau', 'nen'] },
+      { syllables: ['Bä', 'ren'] },
+    ]);
   });
 
   it('should display formatted time', () => {
@@ -68,7 +77,7 @@ describe(TestService, () => {
   it('should advance to the next word on next()', () => {
     service = createService();
     service.viewModel().next();
-    expect(service.viewModel().currentSyllables).toEqual(['Katze']);
+    expect(service.viewModel().currentWords).toEqual([{ syllables: ['Katze'] }]);
     expect(service.viewModel().wordsRead).toBe(1);
   });
 

@@ -2,8 +2,12 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { Router } from '@angular/router';
 import { ReadingTestService } from '../../services/reading-test.service';
 
+interface WordSyllables {
+  syllables: string[];
+}
+
 interface TestViewModel {
-  currentSyllables: string[];
+  currentWords: WordSyllables[];
   colorSyllables: boolean;
   timeDisplay: string;
   isFinished: boolean;
@@ -25,7 +29,7 @@ export class TestService {
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
   readonly viewModel = computed<TestViewModel>(() => ({
-    currentSyllables: (this.words()[this.currentIndex()] ?? '').split('-'),
+    currentWords: (this.words()[this.currentIndex()] ?? '').split(' ').map(word => ({ syllables: word.split('-') })),
     colorSyllables: this.readingTestService.colorSyllables(),
     timeDisplay: this.formatTime(this.remainingSeconds()),
     isFinished: this.finished(),

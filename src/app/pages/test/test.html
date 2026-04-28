@@ -1,9 +1,18 @@
 <div class="timer" aria-live="polite">{{ vm().timeDisplay }}</div>
 
 <p class="current-word">
-  @for (syllable of vm().currentSyllables; track $index) {
-    <span class="syllable" [class.syllable--even]="vm().colorSyllables && $index % 2 === 0"
-          [class.syllable--odd]="vm().colorSyllables && $index % 2 !== 0">{{ syllable }}</span>
+  @for (word of vm().currentWords; track $index) {
+    @if ($index > 0) {
+      &nbsp;
+    }
+    @for (syllable of word.syllables; track $index) {
+      <span
+        class="syllable"
+        [class.syllable--even]="vm().colorSyllables && $index % 2 === 0"
+        [class.syllable--odd]="vm().colorSyllables && $index % 2 !== 0"
+        >{{ syllable }}</span
+      >
+    }
   }
 </p>
 <button type="button">Weiter</button>
