@@ -12,6 +12,7 @@ interface SetupViewModel {
   minutes: FormField<number>;
   seconds: FormField<number>;
   colorSyllables: FormField<boolean>;
+  wordCount: number;
   canStart: boolean;
   start: () => void;
   shuffle: () => void;
@@ -46,33 +47,35 @@ export class SetupService {
     return hasWords && hasTime;
   });
 
-  readonly viewModel = computed<SetupViewModel>(() => ({
-    wordsInput: {
-      value: this.wordsInput(),
-      onChange: (value: string) => this.wordsInput.set(value),
-    },
-    minutes: {
-      value: this.minutes(),
-      onChange: (value: number) => this.minutes.set(value),
-    },
-    seconds: {
-      value: this.seconds(),
-      onChange: (value: number) => this.seconds.set(value),
-    },
-    colorSyllables: {
-      value: this.colorSyllables(),
-      onChange: (value: boolean) => this.colorSyllables.set(value),
-    },
-    canStart: this.canStart(),
-    start: () => this.start(),
-    shuffle: () => this.shuffle(),
-  }));
+  readonly viewModel = computed<SetupViewModel>(() => {
+    const wordCount = this.getWordCount();
+
+    return {
+      wordsInput: {
+        value: this.wordsInput(),
+        onChange: (value: string) => this.wordsInput.set(value),
+      },
+      minutes: {
+        value: this.minutes(),
+        onChange: (value: number) => this.minutes.set(value),
+      },
+      seconds: {
+        value: this.seconds(),
+        onChange: (value: number) => this.seconds.set(value),
+      },
+      colorSyllables: {
+        value: this.colorSyllables(),
+        onChange: (value: boolean) => this.colorSyllables.set(value),
+      },
+      wordCount,
+      canStart: this.canStart(),
+      start: () => this.start(),
+      shuffle: () => this.shuffle(),
+    };
+  });
 
   private shuffle(): void {
-    const words = this.wordsInput()
-      .split('\n')
-      .map((w) => w.trim())
-      .filter((w) => w.length > 0);
+    const words = this.getWords();
 
     for (let i = words.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -83,10 +86,7 @@ export class SetupService {
   }
 
   private start(): void {
-    const words = this.wordsInput()
-      .split('\n')
-      .map((w) => w.trim())
-      .filter((w) => w.length > 0);
+    const words = this.getWords();
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
 
@@ -94,5 +94,16 @@ export class SetupService {
     this.readingTestService.totalSeconds.set(this.minutes() * 60 + this.seconds());
     this.readingTestService.colorSyllables.set(this.colorSyllables());
     this.router.navigate(['/test']);
+  }
+
+  private getWords(): string[] {
+    return this.wordsInput()
+      .split('\n')
+      .map((w) => w.trim())
+      .filter((w) => w.length > 0);
+  }
+
+  private getWordCount(): number {
+    return this.getWords().length;
   }
 }

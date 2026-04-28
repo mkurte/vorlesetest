@@ -64,6 +64,22 @@ describe(SetupService, () => {
     expect(service.viewModel().seconds.value).toBe(30);
   });
 
+  describe('wordCount', () => {
+    it('should be 0 when no words are entered', () => {
+      expect(service.viewModel().wordCount).toBe(0);
+    });
+
+    it('should be 0 when only whitespace is entered', () => {
+      service.viewModel().wordsInput.onChange('   \n  \n');
+      expect(service.viewModel().wordCount).toBe(0);
+    });
+
+    it('should ignore empty lines and trim whitespace', () => {
+      service.viewModel().wordsInput.onChange('Hund\n\n  Katze  \n\nMaus');
+      expect(service.viewModel().wordCount).toBe(3);
+    });
+  });
+
   describe('canStart', () => {
     it('should be false when no words are entered', () => {
       expect(service.viewModel().canStart).toBe(false);

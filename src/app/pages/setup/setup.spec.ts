@@ -54,4 +54,28 @@ describe(Setup, () => {
     const button = element.querySelector('button');
     expect(button?.disabled).toBe(false);
   });
+
+  describe('word count display', () => {
+    async function setWords(value: string): Promise<void> {
+      const textarea = element.querySelector('textarea')!;
+      textarea.value = value;
+      textarea.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      await fixture.whenStable();
+    }
+
+    it('should show "0 Wörter" initially', () => {
+      expect(element.querySelector('.wordcount')?.textContent?.trim()).toBe('0 Wörter');
+    });
+
+    it('should show singular "Wort" for one word', async () => {
+      await setWords('Hund');
+      expect(element.querySelector('.wordcount')?.textContent?.trim()).toBe('1 Wort');
+    });
+
+    it('should show plural "Wörter" for multiple words', async () => {
+      await setWords('Hund\nKatze\nMaus');
+      expect(element.querySelector('.wordcount')?.textContent?.trim()).toBe('3 Wörter');
+    });
+  });
 });
