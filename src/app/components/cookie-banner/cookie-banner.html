@@ -1,0 +1,49 @@
+@if (vm().visible) {
+  <div class="cookie-overlay" aria-hidden="true"></div>
+  <div class="cookie-banner" role="dialog" aria-label="Cookie-Einstellungen" aria-modal="true">
+    <div class="cookie-banner-content">
+      <p>
+        Diese Website verwendet Cookies. Technische Cookies sind f&uuml;r die Funktion der Seite notwendig.
+        Dar&uuml;ber hinaus nutzen wir Google Analytics, um die Nutzung der Website zu analysieren.
+        Mehr Informationen finden Sie in unserer <a href="https://www.kurte.de/impressum.html" target="_blank" rel="noopener noreferrer">Datenschutzerkl&auml;rung</a>.
+      </p>
+
+      @if (vm().showSettings) {
+        <fieldset class="cookie-settings">
+          <legend>Cookie-Einstellungen</legend>
+          <label class="cookie-option">
+            <input type="checkbox" checked disabled />
+            Technisch notwendige Cookies
+          </label>
+          <label class="cookie-option">
+            <input
+              #analyticsCheckbox
+              type="checkbox"
+              [checked]="vm().analyticsCookies.value"
+              (change)="vm().analyticsCookies.onChange(analyticsCheckbox.checked)"
+            />
+            Analyse-Cookies
+          </label>
+        </fieldset>
+      }
+
+      <div class="cookie-banner-actions">
+        @if (vm().showSettings) {
+          <button class="btn" (click)="vm().saveSettings()">
+            Speichern
+          </button>
+        } @else {
+          <button class="btn" (click)="vm().acceptTechnical()">
+            Nur technische Cookies
+          </button>
+          <button class="btn" (click)="vm().toggleSettings()">
+            Einstellungen anpassen
+          </button>
+          <button class="btn" (click)="vm().acceptAll()">
+            Alle Cookies
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

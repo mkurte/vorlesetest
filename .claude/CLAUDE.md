@@ -81,6 +81,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Pages live in `src/app/pages/<page-name>/`
 - Each page has: `<name>.ts`, `<name>.html`, `<name>.scss`, `<name>.service.ts`, `<name>.spec.ts`, `<name>.service.spec.ts`
+- Shared components live in `src/app/components/<component-name>/` (same service+viewModel pattern as pages)
 - Global services live in `src/app/services/`
 - Routes use lazy loading via `loadComponent`
 - Font: Roboto via Google Fonts
@@ -88,6 +89,15 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Route flow: `/setup` → `/test` → `/result`
 - `ReadingTestService` (global) holds shared state: `words`, `totalSeconds`, `wordsRead`, `colorSyllables`
 - localStorage key `vorlesetest-words` persists the word list as JSON array across sessions
+- localStorage key `vorlesetest-cookie-consent` persists cookie consent (`technical` | `all`)
 - Words support syllable notation with hyphens (e.g. `Mie-te`, `A-mei-se`) — split into `string[]` on test page
 - CSS class naming uses BEM-like modifiers (e.g. `syllable--even`, `syllable--odd`)
 - When navigating to a page with `(document:click)`, use a `setTimeout` ready-flag to ignore the triggering click (event bubbling from previous page)
+
+## Cookie Consent & Analytics
+
+- `CookieConsentService` (global) manages consent state via signals and localStorage
+- `AnalyticsService` (global) loads Google Analytics (`G-H4CLMEZGPM`) only when consent is `all`
+- `AnalyticsService` is bootstrapped via `provideAppInitializer` in `app.config.ts`, not injected in components
+- `CookieBanner` component is a modal overlay — blocks interaction until user decides
+- Cookie banner has three options: "Nur technische Cookies", "Einstellungen anpassen" (expandable with checkboxes), "Alle Cookies"
