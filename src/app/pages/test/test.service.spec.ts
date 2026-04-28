@@ -38,9 +38,16 @@ describe(TestService, () => {
     expect(router.navigate).toHaveBeenCalledWith(['/setup']);
   });
 
-  it('should show the first word initially', () => {
+  it('should show the first word as syllables', () => {
     service = createService();
-    expect(service.viewModel().currentWord).toBe('Hund');
+    expect(service.viewModel().currentSyllables).toEqual(['Hund']);
+  });
+
+  it('should split hyphenated words into syllables', () => {
+    service = createService(['Mie-te', 'A-mei-se']);
+    expect(service.viewModel().currentSyllables).toEqual(['Mie', 'te']);
+    service.viewModel().next();
+    expect(service.viewModel().currentSyllables).toEqual(['A', 'mei', 'se']);
   });
 
   it('should display formatted time', () => {
@@ -61,7 +68,7 @@ describe(TestService, () => {
   it('should advance to the next word on next()', () => {
     service = createService();
     service.viewModel().next();
-    expect(service.viewModel().currentWord).toBe('Katze');
+    expect(service.viewModel().currentSyllables).toEqual(['Katze']);
     expect(service.viewModel().wordsRead).toBe(1);
   });
 

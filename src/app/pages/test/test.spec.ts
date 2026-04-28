@@ -9,19 +9,30 @@ describe(Test, () => {
   let element: HTMLElement;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
+
     await TestBed.configureTestingModule({
       imports: [Test],
       providers: [{ provide: Router, useValue: { navigate: vi.fn() } }],
     }).compileComponents();
 
     const readingTestService = TestBed.inject(ReadingTestService);
-    readingTestService.words.set(['Hund', 'Katze', 'Maus']);
+    readingTestService.words.set(['Hund', 'Kat-ze', 'Maus']);
     readingTestService.totalSeconds.set(60);
+    readingTestService.colorSyllables.set(true);
 
     fixture = TestBed.createComponent(Test);
     fixture.detectChanges();
     element = fixture.nativeElement;
   });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function makeReady(): void {
+    vi.advanceTimersByTime(0);
+  }
 
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
@@ -29,6 +40,19 @@ describe(Test, () => {
 
   it('should display the current word', () => {
     expect(element.querySelector('.current-word')?.textContent).toContain('Hund');
+  });
+
+  it('should render syllables as separate spans', () => {
+    makeReady();
+    document.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    const spans = element.querySelectorAll('.current-word span');
+    expect(spans.length).toBe(2);
+    expect(spans[0].textContent).toBe('Kat');
+    expect(spans[1].textContent).toBe('ze');
+    expect(spans[0].classList.contains('syllable--even')).toBe(true);
+    expect(spans[1].classList.contains('syllable--odd')).toBe(true);
   });
 
   it('should display the timer', () => {
@@ -40,6 +64,7 @@ describe(Test, () => {
   });
 
   it('should advance to the next word on document click', () => {
+    makeReady();
     document.dispatchEvent(new Event('click'));
     fixture.detectChanges();
 
@@ -47,10 +72,18 @@ describe(Test, () => {
   });
 
   it('should advance multiple words on repeated document clicks', () => {
+    makeReady();
     document.dispatchEvent(new Event('click'));
     document.dispatchEvent(new Event('click'));
     fixture.detectChanges();
 
     expect(element.querySelector('.current-word')?.textContent).toContain('Maus');
+  });
+
+  it('should ignore clicks before ready', () => {
+    document.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    expect(element.querySelector('.current-word')?.textContent).toContain('Hund');
   });
 });
