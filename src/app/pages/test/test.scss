@@ -26,11 +26,31 @@
   margin: 0;
   word-break: break-word;
 
-  .syllable-even {
+  //.syllable {
+  //  position: relative;
+  //  padding-bottom: 0.15em;
+  //}
+  //
+  //.syllable--even,
+  //.syllable--odd {
+  //  &::after {
+  //    content: '';
+  //    position: absolute;
+  //    bottom: 0;
+  //    left: 10%;
+  //    width: 80%;
+  //    height: 0.3em;
+  //    border: 0.05em solid currentColor;
+  //    border-top: none;
+  //    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  //  }
+  //}
+
+  .syllable--even {
     color: #1565c0;
   }
 
-  .syllable-odd {
+  .syllable--odd {
     color: #c62828;
   }
 }

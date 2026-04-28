@@ -2,8 +2,8 @@
 
 <p class="current-word">
   @for (syllable of vm().currentSyllables; track $index) {
-    <span [class.syllable-even]="vm().colorSyllables && $index % 2 === 0"
-          [class.syllable-odd]="vm().colorSyllables && $index % 2 !== 0">{{ syllable }}</span>
+    <span class="syllable" [class.syllable--even]="vm().colorSyllables && $index % 2 === 0"
+          [class.syllable--odd]="vm().colorSyllables && $index % 2 !== 0">{{ syllable }}</span>
   }
 </p>
 <button type="button">Weiter</button>
