@@ -44,7 +44,7 @@ describe(Test, () => {
 
   it('should render syllables as separate spans', () => {
     makeReady();
-    document.dispatchEvent(new Event('click'));
+    element.click();
     fixture.detectChanges();
 
     const spans = element.querySelectorAll('.current-word span');
@@ -63,25 +63,25 @@ describe(Test, () => {
     expect(element.querySelector('button')?.textContent).toContain('Weiter');
   });
 
-  it('should advance to the next word on document click', () => {
+  it('should advance to the next word on host element click', () => {
     makeReady();
-    document.dispatchEvent(new Event('click'));
+    element.click();
     fixture.detectChanges();
 
     expect(element.querySelector('.current-word')?.textContent).toContain('Katze');
   });
 
-  it('should advance multiple words on repeated document clicks', () => {
+  it('should advance multiple words on repeated host element clicks', () => {
     makeReady();
-    document.dispatchEvent(new Event('click'));
-    document.dispatchEvent(new Event('click'));
+    element.click();
+    element.click();
     fixture.detectChanges();
 
     expect(element.querySelector('.current-word')?.textContent).toContain('Maus');
   });
 
   it('should ignore clicks before ready', () => {
-    document.dispatchEvent(new Event('click'));
+    element.click();
     fixture.detectChanges();
 
     expect(element.querySelector('.current-word')?.textContent).toContain('Hund');

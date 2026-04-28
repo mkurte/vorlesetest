@@ -2,3 +2,21 @@ body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+
+  a {
+    color: inherit;
+    opacity: 0.4;
+    font-size: 0.75rem;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

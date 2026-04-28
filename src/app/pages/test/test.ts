@@ -8,7 +8,7 @@ import { TestService } from './test.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TestService],
   host: {
-    '(document:click)': 'onDocumentClick()',
+    '(click)': 'onHostClick()',
   },
 })
 export class Test {
@@ -19,7 +19,7 @@ export class Test {
     setTimeout(() => (this.ready.set(true)));
   }
 
-  protected onDocumentClick(): void {
+  protected onHostClick(): void {
     if (this.ready() && !this.vm().isFinished) {
       this.vm().next();
     }
